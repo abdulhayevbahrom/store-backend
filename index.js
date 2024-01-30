@@ -26,7 +26,11 @@ app.get("/", (req, res) => {
 
 // END-POINTS
 const pro = require("./routes/product");
+const { creditUser } = require("./routes/creditUser")
+
 app.use("/pro", pro);
+app.use("/creditUser", creditUser);
+
 
 // LISTENING DIRECTORY
 const PORT = process.env.PORT || 5500;
