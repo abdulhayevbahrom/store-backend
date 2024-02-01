@@ -26,13 +26,58 @@ const getData = async (req, res) => {
 
 const createData = async (req, res) => {
   try {
+    let {
+      title,
+      size,
+      orgPrice,
+      price,
+      quantity,
+      color,
+      brand,
+      subcategory,
+      category,
+    } = await req.body;
+    let proCategory = await productDB.find();
     let product = await productDB.create(req.body);
     let saved = await product.save();
-    res.status(201).json({
-      status: "success",
-      msg: "Product is created",
-      innerData: saved,
-    });
+
+    let findProcategory = await proCategory.find(
+      (i) => i.category === category
+    );
+    if (findProcategory) {
+      if (
+        findProcategory.title === title &&
+        findProcategory.size === size &&
+        findProcategory.orgPrice === orgPrice &&
+        findProcategory.price === price &&
+        findProcategory.color === color &&
+        findProcategory.brand === brand &&
+        findProcategory.subcategory === subcategory
+      ) {
+        let addQuantity = (await findProcategory.quantity) + quantity;
+        res.status(201).json({
+          status: "success",
+          msg: "Product is created",
+          innerData: {
+            proData: findProcategory,
+            addProQuantity: addQuantity,
+          },
+        });
+      } else {
+        console.log("err");
+      }
+    } else {
+      res.status(201).json({
+        status: "success",
+        msg: "Product is created",
+        innerData: {
+          proSavId: saved._id,
+          proSaved: saved,
+        },
+      });
+    }
+
+    // console.log(category);
   } catch (err) {
     res.status(500).json({ status: "error", msg: err, innerData: null });
   }
