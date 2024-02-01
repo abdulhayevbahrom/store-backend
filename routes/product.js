@@ -8,12 +8,13 @@ const {
   updateData,
   search,
   category,
+  scan,
 } = require("../controller/productControl");
 const pro = Router();
 
 pro.get("/allProducts", getData);
 
-pro.post("/create", [productValidation.add], createData);
+pro.post("/create", createData);
 
 pro.put("/update/:id", updateData);
 
@@ -24,5 +25,7 @@ pro.get("/single/:id", getSingle);
 pro.post("/search", search);
 
 pro.post("/category", category);
+
+pro.post("/scan", scan);
 
 module.exports = pro;

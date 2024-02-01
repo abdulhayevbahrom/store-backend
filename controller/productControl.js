@@ -14,7 +14,7 @@ const getData = async (req, res) => {
     }
     res.status(200).json({
       status: "success",
-      msg: "Product are found",
+      msg: "Products are found",
       innerData: AllProducts,
     });
   } catch (err) {
@@ -123,7 +123,7 @@ const category = async (req, res) => {
     if (!filteredData.length) {
       return res.status(404).json({
         status: "warning",
-        msg: "Product not found",
+        msg: "No products found",
         innerData: filteredData,
       });
     }
@@ -138,6 +138,29 @@ const category = async (req, res) => {
   }
 };
 
+// SCANNED DATA
+
+const scan = async (req, res) => {
+  try {
+    let { barcode } = req.body;
+    let filteredData = await productDB.findOne({ barcode });
+    if (filteredData) {
+      return res.status(200).json({
+        status: "success",
+        msg: "product is found",
+        innerData: filteredData,
+      });
+    }
+    res.status(404).json({
+      status: "warning",
+      msg: "product is not found",
+      innerData: null,
+    });
+  } catch (err) {
+    res.status(500).json({ status: "error", msg: err, innerData: null });
+  }
+};
+
 module.exports = {
   getData,
   getSingle,
@@ -146,4 +169,5 @@ module.exports = {
   deleteData,
   search,
   category,
+  scan,
 };

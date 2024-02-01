@@ -29,6 +29,9 @@ const schema = new Schema({
   brand: {
     type: String,
   },
+  barcode: {
+    type: String,
+  },
 });
 
 const productDB = model("products", schema);
