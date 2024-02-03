@@ -18,7 +18,7 @@ app.use(
 
 connect(process.env.MONGODB_URI)
   .then(() => console.log("Connected to Database".bgGreen))
-  .catch(() => console.log("Not connected to Database".bgGreen));
+  .catch(() => console.log("Not connected to Database".bgRed));
 
 app.get("/", (req, res) => {
   res.send("App is running");

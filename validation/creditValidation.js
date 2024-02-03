@@ -7,6 +7,29 @@ const creditValidation = (req, res, next) => {
         address: Joi.string().required(),
         phone: Joi.string().required().min(8),
         passport: Joi.string().required().min(9),
+        stories: Joi.array().items(
+            Joi.object({
+              boughtTime: Joi.string().required(),
+              totalPrice: Joi.number().required(),
+              subTotal: Joi.number().required(),
+              products: Joi.array()
+                .items(
+                  Joi.object({
+                    title: Joi.string().required(),
+                    price: Joi.number().required(),
+                    barcode: Joi.string().required(),
+                    brand: Joi.string(),
+                    category: Joi.number().required(),
+                    color: Joi.string(),
+                    subcategory: Joi.string(),
+                    quantity: Joi.number().required(),
+                    size: Joi.number(),
+                    totalPrice: Joi.number().required()
+                  })
+                )
+                .required(),
+            })
+          ),
     });
 
     const { error } = schema.validate(req.body);
