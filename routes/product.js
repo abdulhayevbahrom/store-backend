@@ -9,16 +9,19 @@ const {
   search,
   category,
   scan,
+  deleteAllData,
 } = require("../controller/productControl");
 const pro = Router();
 
 pro.get("/allProducts", getData);
 
-pro.post("/create", createData);
+pro.post("/create", [productValidation.add], createData);
 
 pro.put("/update/:id", updateData);
 
 pro.delete("/delete/:id", deleteData);
+
+pro.delete("/deleteAllData", deleteAllData);
 
 pro.get("/single/:id", getSingle);
 

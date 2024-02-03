@@ -56,6 +56,26 @@ const updateData = async (req, res) => {
   }
 };
 
+//UPDATE MANY PRODUCTS QUANTITY
+const updateManyData = async (req, res) => {
+  try {
+    let updatedpro = req.body;
+    let updatePro = await productDB.updateMany(
+      { id: updatedpro._id },
+      { $set: { quantity: quantity - updatedpro.quantity } }
+    );
+    if (!updatePro) {
+      return res
+        .status(404)
+        .json({ msg: "products are not found", innerData: updatePro });
+    }
+    res
+      .status(201)
+      .json({ msg: "products are updated ", innerData: updatePro });
+  } catch (err) {
+    res.status(500).json({ status: "error", msg: err, innerData: null });
+  }
+};
 // DELETE DATA
 
 const deleteData = async (req, res) => {
@@ -72,7 +92,20 @@ const deleteData = async (req, res) => {
     res.status(500).json({ status: "error", msg: err, innerData: null });
   }
 };
-
+// DELETE ALL DATA
+const deleteAllData = async (req, res) => {
+  try {
+    let empty = await productDB.deleteMany({});
+    if (!empty) {
+      return res
+        .status(404)
+        .json({ msg: "Couldn't delete products", innerData: deletedpro });
+    }
+    res.send({ msg: "collection is cleared", innerData: deletedpro });
+  } catch (err) {
+    res.status(500).json({ status: "error", msg: err, innerData: null });
+  }
+};
 // SINGLE DATA
 
 const getSingle = async (req, res) => {
@@ -170,4 +203,5 @@ module.exports = {
   search,
   category,
   scan,
+  deleteAllData,
 };

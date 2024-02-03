@@ -18,7 +18,7 @@ app.use(
 
 connect(process.env.MONGODB_URI)
   .then(() => console.log("Connected to Database".bgGreen))
-  .catch(() => console.log("Not connected to Database".bgGreen));
+  .catch(() => console.log("Not connected to Database".bgRed));
 
 app.get("/", (req, res) => {
   res.send("App is running");
@@ -26,9 +26,11 @@ app.get("/", (req, res) => {
 
 // END-POINTS
 const pro = require("./routes/product");
+const soldPro = require("./routes/soldProducts");
 const { creditUser } = require("./routes/creditUser");
 
 app.use("/pro", pro);
+app.use("/soldPro", soldPro);
 app.use("/creditUser", creditUser);
 
 // LISTENING DIRECTORY
