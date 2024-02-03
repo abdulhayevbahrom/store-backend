@@ -26,9 +26,11 @@ app.get("/", (req, res) => {
 
 // END-POINTS
 const pro = require("./routes/product");
+const soldPro = require("./routes/soldProducts");
 const { creditUser } = require("./routes/creditUser");
 
 app.use("/pro", pro);
+app.use("/soldPro", soldPro);
 app.use("/creditUser", creditUser);
 
 // LISTENING DIRECTORY
