@@ -1,6 +1,9 @@
 const { model, Schema } = require("mongoose");
 
 const schema = new Schema({
+  //   history: {
+  //     type: Array,
+  //   },
   title: {
     type: String,
   },
@@ -32,8 +35,15 @@ const schema = new Schema({
   barcode: {
     type: String,
   },
+  totalPrice: {
+    type: Number,
+  },
+  addedTime: {
+    type: String,
+    default: new Date().toLocaleString(),
+  },
 });
 
-const productDB = model("products", schema);
+const soldProductDB = model("soldProducts", schema);
 
-module.exports = productDB;
+module.exports = soldProductDB;

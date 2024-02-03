@@ -8,6 +8,9 @@ const {
   updateData,
   search,
   category,
+  scan,
+  deleteAllData,
+  updateManyData,
 } = require("../controller/productControl");
 const pro = Router();
 
@@ -19,10 +22,16 @@ pro.put("/update/:id", updateData);
 
 pro.delete("/delete/:id", deleteData);
 
+pro.delete("/deleteAllData", deleteAllData);
+
 pro.get("/single/:id", getSingle);
 
 pro.post("/search", search);
 
 pro.post("/category", category);
+
+pro.post("/scan", scan);
+
+pro.patch("/updateQty", updateManyData);
 
 module.exports = pro;

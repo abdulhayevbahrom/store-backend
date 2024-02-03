@@ -14,7 +14,7 @@ const getData = async (req, res) => {
     }
     res.status(200).json({
       status: "success",
-      msg: "Product are found",
+      msg: "Products are found",
       innerData: AllProducts,
     });
   } catch (err) {
@@ -26,58 +26,13 @@ const getData = async (req, res) => {
 
 const createData = async (req, res) => {
   try {
-    let {
-      title,
-      size,
-      orgPrice,
-      price,
-      quantity,
-      color,
-      brand,
-      subcategory,
-      category,
-    } = await req.body;
-    let proCategory = await productDB.find();
     let product = await productDB.create(req.body);
     let saved = await product.save();
-
-    let findProcategory = await proCategory.find(
-      (i) => i.category === category
-    );
-    if (findProcategory) {
-      if (
-        findProcategory.title === title &&
-        findProcategory.size === size &&
-        findProcategory.orgPrice === orgPrice &&
-        findProcategory.price === price &&
-        findProcategory.color === color &&
-        findProcategory.brand === brand &&
-        findProcategory.subcategory === subcategory
-      ) {
-        let addQuantity = (await findProcategory.quantity) + quantity;
-        res.status(201).json({
-          status: "success",
-          msg: "Product is created",
-          innerData: {
-            proData: findProcategory,
-            addProQuantity: addQuantity,
-          },
-        });
-      } else {
-        console.log("err");
-      }
-    } else {
-      res.status(201).json({
-        status: "success",
-        msg: "Product is created",
-        innerData: {
-          proSavId: saved._id,
-          proSaved: saved,
-        },
-      });
-    }
-
-    // console.log(category);
+    res.status(201).json({
+      status: "success",
+      msg: "Product is created",
+      innerData: saved,
+    });
   } catch (err) {
     res.status(500).json({ status: "error", msg: err, innerData: null });
   }
@@ -101,6 +56,67 @@ const updateData = async (req, res) => {
   }
 };
 
+//UPDATE MANY PRODUCTS QUANTITY
+// const updateManyData = async (req, res) => {
+//   try {
+//     const array = req.body;
+//     for (const item of array) {
+//       const malumot = await productDB.findById(item._id);
+//       if (malumot) {
+//         malumot.quantity = malumot.quantity - item.quantity;
+//         await malumot.save();
+//       }
+//     }
+//   } catch (err) {
+//     res.status(500).json({ status: "error", msg: err, innerData: null });
+//   }
+// };
+
+const updateManyData = async (req, res) => {
+  try {
+    const array = req.body;
+    // Basic input validation
+    if (!Array.isArray(array)) {
+      return res
+        .status(400)
+        .json({ status: "error", msg: "Noto'g'ri malumot yuborildi" });
+    }
+
+    for (const item of array) {
+      // Check if the item has the required properties
+      if (!item._id || !item.quantity) {
+        return res
+          .status(400)
+          .json({ status: "error", msg: "_id va quantity topilmadi" });
+      }
+
+      const malumot = await productDB.findById(item._id);
+
+      if (malumot) {
+        malumot.quantity = malumot.quantity - item.quantity;
+        await malumot.save();
+      } else {
+        return res.status(404).json({
+          status: "error",
+          msg: "Mahsulot topilmadi",
+          innerData: item,
+        });
+      }
+    }
+
+    res.status(200).json({
+      status: "success",
+      msg: "Products updated successfully",
+      innerData: null,
+    });
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ status: "error", msg: "Internal server error", innerData: null });
+  }
+};
+
 // DELETE DATA
 
 const deleteData = async (req, res) => {
@@ -117,7 +133,20 @@ const deleteData = async (req, res) => {
     res.status(500).json({ status: "error", msg: err, innerData: null });
   }
 };
-
+// DELETE ALL DATA
+const deleteAllData = async (req, res) => {
+  try {
+    let empty = await productDB.deleteMany({});
+    if (!empty) {
+      return res
+        .status(404)
+        .json({ msg: "Couldn't delete products", innerData: deletedpro });
+    }
+    res.send({ msg: "collection is cleared", innerData: deletedpro });
+  } catch (err) {
+    res.status(500).json({ status: "error", msg: err, innerData: null });
+  }
+};
 // SINGLE DATA
 
 const getSingle = async (req, res) => {
@@ -168,7 +197,7 @@ const category = async (req, res) => {
     if (!filteredData.length) {
       return res.status(404).json({
         status: "warning",
-        msg: "Product not found",
+        msg: "No products found",
         innerData: filteredData,
       });
     }
@@ -183,6 +212,29 @@ const category = async (req, res) => {
   }
 };
 
+// SCANNED DATA
+
+const scan = async (req, res) => {
+  try {
+    let { barcode } = req.body;
+    let filteredData = await productDB.findOne({ barcode });
+    if (filteredData) {
+      return res.status(200).json({
+        status: "success",
+        msg: "product is found",
+        innerData: filteredData,
+      });
+    }
+    res.status(404).json({
+      status: "warning",
+      msg: "product is not found",
+      innerData: null,
+    });
+  } catch (err) {
+    res.status(500).json({ status: "error", msg: err, innerData: null });
+  }
+};
+
 module.exports = {
   getData,
   getSingle,
@@ -191,4 +243,7 @@ module.exports = {
   deleteData,
   search,
   category,
+  scan,
+  deleteAllData,
+  updateManyData,
 };

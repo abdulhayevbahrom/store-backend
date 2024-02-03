@@ -1,6 +1,12 @@
 const AJV = require("ajv");
 const ajv = new AJV();
 
+async function add(schema, data) {
+  const result = ajv.validate(schema, data);
+  if (result) return null;
+  return ajv.errorsText();
+}
+
 class productValidation {
   async add(req, res, next) {
     const schema = {
@@ -33,6 +39,9 @@ class productValidation {
         brand: {
           type: "string",
         },
+        barcode: {
+          type: "string",
+        },
       },
       required: ["title", "orgPrice", "price", "quantity", "category"],
       additionalProperties: false,
@@ -42,12 +51,6 @@ class productValidation {
     if (!result) return next();
     await res.status(400).send(result);
   }
-}
-
-async function add(schema, data) {
-  const result = ajv.validate(schema, data);
-  if (result) return null;
-  return ajv.errorsText();
 }
 
 module.exports = new productValidation();
