@@ -46,11 +46,14 @@ const updateData = async (req, res) => {
     let updatedpro = req.body;
     let updatePro = await productDB.findByIdAndUpdate(id, updatedpro);
     if (!updatePro) {
-      return res
-        .status(404)
-        .json({ msg: "product is not found", innerData: updatePro });
+      return res.status(404).json({
+        msg: "product is not found",
+        innerData: updatePro,
+      });
     }
-    res.status(201).json({ msg: "product is updated ", innerData: updatePro });
+    res
+      .status(201)
+      .json({ status: true, msg: "product is updated ", innerData: updatePro });
   } catch (err) {
     res.status(500).json({ status: "error", msg: err, innerData: null });
   }
