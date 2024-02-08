@@ -8,4 +8,10 @@ soldPro.get("/allProducts", getData);
 
 soldPro.post("/create", createData);
 
+// soldPro.put("/update/:id", updateData);
+
+// soldPro.delete("/delete/:id", deleteData);
+
+// soldPro.delete("/deleteAllData", deleteAllData);
+
 module.exports = soldPro;
