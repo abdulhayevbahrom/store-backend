@@ -51,4 +51,23 @@ const createCreditUser = async (req, res) => {
   }
 };
 
-module.exports = { getCreditData, createCreditUser };
+// cridit find user
+
+const criditFindUser = async (req, res) => {
+  try {
+    let { id } = req.body;
+    let criditExactUser = await userDB.findById(id);
+    if (!criditExactUser) {
+      res
+        .status(404)
+        .json({ msg: false, status: "warning", innerData: criditExactUser });
+    }
+    console.log(criditExactUser);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: "error", msg: "internal server error", innerData: null });
+  }
+};
+
+module.exports = { getCreditData, createCreditUser, criditFindUser };
