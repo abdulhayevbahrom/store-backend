@@ -51,6 +51,29 @@ const createCreditUser = async (req, res) => {
   }
 };
 
+// credit delete one user
+
+const createDeleteOneUser = async (req, res) => {
+  try {
+    let { id } = req.params;
+
+    let deleteUser = await userDB.findByIdAndDelete(id);
+
+    if (!deleteUser) {
+      return res.status(404).json({
+        msg: "credit user is not found",
+        status: true,
+        innerData: deleteUser,
+      });
+    }
+    res.send({ msg: "credit user is deleted", innerData: deleteUser });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: "error", msg: "internal server error", innerData: null });
+  }
+};
+
 // cridit find user
 
 const criditFindUser = async (req, res) => {
@@ -76,16 +99,15 @@ const creditFindRegister = async (req, res) => {
   try {
     let { phone, passport } = req.body;
 
-    let creditFindUser = await userDB.find({ passport, phone });
+    let creditFindUser = await userDB.findOne({ phone, passport });
+    console.log(creditFindUser, passport);
 
-    // if (!creditFindUser) {
-    //   res
-    //     .status(404)
-    //     .json({ msg: false, status: "warning", innerData: creditFindUser });
-    // }
-
-    console.log(createCreditUser);
-  } catch (err) {
+    if (!creditFindUser) {
+      res
+        .status(404)
+        .json({ msg: false, status: "warning", innerData: creditFindUser });
+    }
+  } catch {
     res
       .status(500)
       .json({ status: "error", msg: "internal server error", innerData: null });
@@ -96,5 +118,6 @@ module.exports = {
   getCreditData,
   createCreditUser,
   criditFindUser,
+  createDeleteOneUser,
   creditFindRegister,
 };

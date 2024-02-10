@@ -7,6 +7,7 @@ const {
   createCreditUser,
   criditFindUser,
   creditFindRegister,
+  createDeleteOneUser,
 } = require("../controller/creditControl");
 
 creditUser.get("/creditUsers", getCreditData);
@@ -14,6 +15,8 @@ creditUser.get("/creditUsers", getCreditData);
 creditUser.post("/create", [creditValidation], createCreditUser);
 
 creditUser.post("/creditFindUser/:id", criditFindUser);
+
+creditUser.delete("/creditDeleteOneUser/:id", createDeleteOneUser);
 
 creditUser.post("/creditFindRegister", creditFindRegister);
 
