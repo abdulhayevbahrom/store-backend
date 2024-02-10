@@ -62,7 +62,7 @@ const criditFindUser = async (req, res) => {
         .status(404)
         .json({ msg: false, status: "warning", innerData: criditExactUser });
     }
-    console.log(criditExactUser);
+    // console.log(criditExactUser);
   } catch (err) {
     res
       .status(500)
@@ -70,4 +70,31 @@ const criditFindUser = async (req, res) => {
   }
 };
 
-module.exports = { getCreditData, createCreditUser, criditFindUser };
+// credit  find register
+
+const creditFindRegister = async (req, res) => {
+  try {
+    let { phone, passport } = req.body;
+
+    let creditFindUser = await userDB.find({ passport, phone });
+
+    // if (!creditFindUser) {
+    //   res
+    //     .status(404)
+    //     .json({ msg: false, status: "warning", innerData: creditFindUser });
+    // }
+
+    console.log(createCreditUser);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: "error", msg: "internal server error", innerData: null });
+  }
+};
+
+module.exports = {
+  getCreditData,
+  createCreditUser,
+  criditFindUser,
+  creditFindRegister,
+};

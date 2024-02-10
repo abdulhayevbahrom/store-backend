@@ -7,6 +7,7 @@ const creditValidation = (req, res, next) => {
     address: Joi.string().required(),
     phone: Joi.number().required().min(8),
     passport: Joi.string().required().min(9),
+    data: Joi.string().required(),
     stories: Joi.array().items(
       Joi.object({
         boughtTime: Joi.string().required(),
